@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:just_sudoku/actions.dart';
-import 'package:just_sudoku/board.dart';
-import 'package:just_sudoku/board_numbers.dart';
-import 'package:just_sudoku/information.dart';
+import 'package:just_sudoku/widgets/actions.dart';
+import 'package:just_sudoku/widgets/board.dart';
+import 'package:just_sudoku/widgets/board_numbers.dart';
+import 'package:just_sudoku/widgets/information.dart';
 
 class SudokuPage extends StatelessWidget {
   const SudokuPage({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:just_sudoku/sudoku_page.dart';
+import 'package:just_sudoku/pages/sudoku_page.dart';
 
 void main() {
   runApp(const MyApp());
