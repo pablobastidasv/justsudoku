@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
 
 class BoardWidget extends StatelessWidget {
   const BoardWidget({Key? key}) : super(key: key);
@@ -60,15 +62,51 @@ class _CellWidgetState extends State<CellWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const size = 80.0;
+    const size = 70.0;
     final border = _buildBorder();
+    var number = 0;
 
-    return Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(border: border),
-      child: const NumberedCell(),
+    return InkWell(
+      onTap: () {
+        BlocProvider.of<SudokuBloc>(context).add(CellSelected(widget.id));
+      },
+      child: BlocBuilder<SudokuBloc, SudokuState>(
+        buildWhen: (ctx, state) {
+          return state is SelectedCell || state is SelectedNumber;
+        },
+        builder: (context, state) {
+          var boxDecoration = BoxDecoration(border: border);
+          if (state is SelectedCell) {
+            final color = _buildCellColor(state);
+            boxDecoration = BoxDecoration(border: border, color: color);
+          }
+
+          if (state is SelectedNumber) {
+            if (state.id == widget.id) {
+              number = state.number;
+            }
+          }
+
+          return Container(
+            height: size,
+            width: size,
+            decoration: boxDecoration,
+            child: NumberedCell(number: number),
+          );
+        },
+      ),
     );
+  }
+
+  Color _buildCellColor(SelectedCell state) {
+    if (state.id == widget.id) {
+      return Colors.indigo;
+    } else if (state.id.column == widget.id.column) {
+      return Colors.lightBlueAccent;
+    } else if (state.id.line == widget.id.line) {
+      return Colors.lightBlueAccent;
+    }
+    return Theme.of(context).scaffoldBackgroundColor;
   }
 
   Border _buildBorder() {
@@ -96,17 +134,18 @@ class _CellWidgetState extends State<CellWidget> {
 }
 
 class NumberedCell extends StatelessWidget {
-  const NumberedCell({
-    Key? key,
-  }) : super(key: key);
+  final int number;
+
+  const NumberedCell({Key? key, required this.number}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final String data = number == 0 ? '' : '$number';
+    return Center(
       child: Text(
-        '9',
+        data,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 48),
+        style: const TextStyle(fontSize: 48),
       ),
     );
   }
@@ -161,7 +200,7 @@ class CandidateNumberWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '$number',
-      style: const TextStyle(color: Colors.grey, fontSize: 21),
+      style: const TextStyle(color: Colors.grey, fontSize: 19),
     );
   }
 }

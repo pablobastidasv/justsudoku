@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
 
 class NumbersWidget extends StatelessWidget {
   const NumbersWidget({Key? key}) : super(key: key);
@@ -19,18 +21,39 @@ class NumbersWidget extends StatelessWidget {
   }
 }
 
-class NumberWidget extends StatelessWidget {
+class NumberWidget extends StatefulWidget {
   final int number;
 
   const NumberWidget({Key? key, required this.number}) : super(key: key);
 
   @override
+  State<NumberWidget> createState() => _NumberWidgetState();
+}
+
+class _NumberWidgetState extends State<NumberWidget> {
+  @override
   Widget build(BuildContext context) {
-    return Text(
-      '$number',
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 48,
+    return InkWell(
+      onTap: () {
+        BlocProvider.of<SudokuBloc>(context).add(NumberSelected(widget.number));
+      },
+      child: BlocBuilder<SudokuBloc, SudokuState>(
+        buildWhen: (ctx, state) => state is SwitchCandidate,
+        builder: (context, state) {
+          Color color =
+              Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
+          if (state is SwitchCandidate && state.candidate) {
+            color = Colors.grey;
+          }
+          return Text(
+            '${widget.number}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 48,
+              color: color,
+            ),
+          );
+        },
       ),
     );
   }
