@@ -15,11 +15,7 @@ class HelpersWidget extends StatelessWidget {
           message: "Undo",
           onTab: (ctx) {},
         ),
-        ActionButton(
-          icon: Icons.clear,
-          message: "Erase",
-          onTab: (ctx) {},
-        ),
+        const EraseButton(),
         const CandidateButton(),
         ActionButton(
           icon: Icons.lightbulb,
@@ -31,6 +27,23 @@ class HelpersWidget extends StatelessWidget {
   }
 }
 
+class EraseButton extends StatelessWidget {
+  const EraseButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionButton(
+      icon: Icons.clear,
+      message: "Erase",
+      onTab: _cleanCell,
+    );
+  }
+
+  _cleanCell(BuildContext ctx) {
+    BlocProvider.of<SudokuBloc>(ctx).add(CleanCell());
+  }
+}
+
 class CandidateButton extends StatelessWidget {
   const CandidateButton({Key? key}) : super(key: key);
 
@@ -38,19 +51,17 @@ class CandidateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SudokuBloc, SudokuState>(
       builder: (context, state) {
+        var color =
+            Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
         if (state is SwitchCandidate && state.candidate) {
-          return ActionButton(
-            icon: Icons.edit,
-            message: "Candidate",
-            onTab: (ctx) => _switchCandidate(ctx),
-            color: Colors.grey,
-          );
+          color = Colors.grey;
         }
 
         return ActionButton(
           icon: Icons.edit,
           message: "Candidate",
           onTab: (ctx) => _switchCandidate(ctx),
+          color: color,
         );
       },
     );
@@ -59,7 +70,6 @@ class CandidateButton extends StatelessWidget {
   _switchCandidate(BuildContext context) =>
       BlocProvider.of<SudokuBloc>(context).add(CandidateSwitched());
 }
-
 
 class ActionButton extends StatelessWidget {
   final IconData icon;
@@ -77,21 +87,20 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Column(
-        children: [
-          IconButton(
-            onPressed: () => onTab(context),
-            icon: Icon(
-              icon,
-              color: color,
-            ),
+    return Column(
+      children: [
+        IconButton(
+          onPressed: () => onTab(context),
+          icon: Icon(
+            icon,
+            color: color,
           ),
-          Text(
-            message,
-            style: TextStyle(color: color),
-          ),
-        ],
-      );
+        ),
+        Text(
+          message,
+          style: TextStyle(color: color),
+        ),
+      ],
+    );
   }
 }

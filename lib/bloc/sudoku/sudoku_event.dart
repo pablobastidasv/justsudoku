@@ -26,3 +26,8 @@ class CandidateSwitched extends SudokuEvent {
   @override
   List<Object> get props => [];
 }
+
+class CleanCell extends SudokuEvent {
+  @override
+  List<Object> get props => [];
+}
