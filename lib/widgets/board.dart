@@ -1,19 +1,31 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
+import 'package:just_sudoku/model/board.dart';
 
 class BoardWidget extends StatelessWidget {
   const BoardWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final columns = [for (var i = 0; i < 9; i += 1) CellRow(rowId: i)];
+    final columns = List.generate(
+      defaultBoardSize,
+      (row) => List.generate(
+        defaultBoardSize,
+        (column) => CellWidget(id: CellId(column, row)),
+        growable: false,
+      ),
+      growable: false,
+    );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
-          children: columns,
+          children: [
+            for(var column = 0; column<defaultBoardSize; column ++)
+              CellRow(cells: columns[column])
+          ],
         ),
       ],
     );
@@ -21,15 +33,12 @@ class BoardWidget extends StatelessWidget {
 }
 
 class CellRow extends StatelessWidget {
-  final int rowId;
+  final List<CellWidget> cells;
 
-  const CellRow({Key? key, required this.rowId}) : super(key: key);
+  const CellRow({Key? key, required this.cells}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cells = [
-      for (var i = 0; i < 9; i += 1) CellWidget(id: CellId(rowId, i))
-    ];
     return Row(
       children: cells,
     );
@@ -43,18 +52,6 @@ class CellWidget extends StatefulWidget {
 
   @override
   State<CellWidget> createState() => _CellWidgetState();
-}
-
-class CellId extends Equatable {
-  final int line;
-  final int column;
-
-  const CellId(this.line, this.column)
-      : assert(line >= 0 && line <= 8),
-        assert(column >= 0 && column <= 8);
-
-  @override
-  List<Object> get props => [line, column];
 }
 
 class _CellWidgetState extends State<CellWidget> {
@@ -103,7 +100,7 @@ class _CellWidgetState extends State<CellWidget> {
       return Colors.indigo;
     } else if (state.id.column == widget.id.column) {
       return Colors.lightBlueAccent;
-    } else if (state.id.line == widget.id.line) {
+    } else if (state.id.row == widget.id.row) {
       return Colors.lightBlueAccent;
     }
     return Theme.of(context).scaffoldBackgroundColor;
@@ -119,10 +116,10 @@ class _CellWidgetState extends State<CellWidget> {
     var bottom = soft;
 
     if (widget.id.column == 0) left = strong;
-    if (widget.id.line == 0) top = strong;
+    if (widget.id.row == 0) top = strong;
 
     if ((widget.id.column + 1) % 3 == 0) right = strong;
-    if ((widget.id.line + 1) % 3 == 0) bottom = strong;
+    if ((widget.id.row + 1) % 3 == 0) bottom = strong;
 
     return Border(
       top: top,

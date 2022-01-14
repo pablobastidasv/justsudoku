@@ -1,7 +1,7 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:just_sudoku/widgets/board.dart';
+import 'package:just_sudoku/model/board.dart';
 
 part 'sudoku_event.dart';
 part 'sudoku_state.dart';
