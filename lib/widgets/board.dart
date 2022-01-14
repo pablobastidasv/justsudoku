@@ -65,20 +65,20 @@ class _CellWidgetState extends State<CellWidget> {
 
     return InkWell(
       onTap: () {
-        BlocProvider.of<SudokuBloc>(context).add(CellSelected(widget.id));
+        BlocProvider.of<SudokuBloc>(context).add(CellSelectedEvent(widget.id));
       },
       child: BlocBuilder<SudokuBloc, SudokuState>(
         buildWhen: (ctx, state) {
-          return state is SelectedCell || state is SelectedNumber;
+          return state is SelectedCellState || state is SelectedNumberState;
         },
         builder: (context, state) {
           var boxDecoration = BoxDecoration(border: border);
-          if (state is SelectedCell) {
+          if (state is SelectedCellState) {
             final color = _buildCellColor(state);
             boxDecoration = BoxDecoration(border: border, color: color);
           }
 
-          if (state is SelectedNumber) {
+          if (state is SelectedNumberState) {
             if (state.id == widget.id) {
               number = state.number;
             }
@@ -95,7 +95,7 @@ class _CellWidgetState extends State<CellWidget> {
     );
   }
 
-  Color _buildCellColor(SelectedCell state) {
+  Color _buildCellColor(SelectedCellState state) {
     if (state.id == widget.id) {
       return Colors.indigo;
     } else if (state.id.column == widget.id.column) {

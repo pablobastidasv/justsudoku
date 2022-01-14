@@ -40,7 +40,7 @@ class EraseButton extends StatelessWidget {
   }
 
   _cleanCell(BuildContext ctx) {
-    BlocProvider.of<SudokuBloc>(ctx).add(CleanCell());
+    BlocProvider.of<SudokuBloc>(ctx).add(CleanCellEvent());
   }
 }
 
@@ -50,11 +50,11 @@ class CandidateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SudokuBloc, SudokuState>(
-      buildWhen: (ctx, state) => state is SwitchCandidate,
+      buildWhen: (ctx, state) => state is SwitchCandidateState,
       builder: (context, state) {
         var color =
             Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
-        if (state is SwitchCandidate && state.candidate) {
+        if (state is SwitchCandidateState && state.candidate) {
           color = Colors.grey;
         }
 
@@ -69,7 +69,7 @@ class CandidateButton extends StatelessWidget {
   }
 
   _switchCandidate(BuildContext context) =>
-      BlocProvider.of<SudokuBloc>(context).add(CandidateSwitched());
+      BlocProvider.of<SudokuBloc>(context).add(CandidateSwitchedEvent());
 }
 
 class ActionButton extends StatelessWidget {

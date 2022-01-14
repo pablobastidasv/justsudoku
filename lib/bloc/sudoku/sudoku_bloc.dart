@@ -12,31 +12,31 @@ class SudokuBloc extends Bloc<SudokuEvent, SudokuState> {
   bool candidate = false;
 
   SudokuBloc() : super(SudokuInitial()) {
-    on<CellSelected>(_cellSelected);
-    on<NumberSelected>(_numberSelected);
-    on<CandidateSwitched>(_candidateSwitched);
-    on<CleanCell>(_cleanSelectedCell);
+    on<CellSelectedEvent>(_cellSelected);
+    on<NumberSelectedEvent>(_numberSelected);
+    on<CandidateSwitchedEvent>(_candidateSwitched);
+    on<CleanCellEvent>(_cleanSelectedCell);
   }
 
-  _cellSelected(CellSelected event, Emitter<SudokuState> emit) {
+  _cellSelected(CellSelectedEvent event, Emitter<SudokuState> emit) {
     selectedCell = event.cell;
-    emit(SelectedCell(event.cell));
+    emit(SelectedCellState(event.cell));
   }
 
-  _numberSelected(NumberSelected event, Emitter<SudokuState> emit) {
+  _numberSelected(NumberSelectedEvent event, Emitter<SudokuState> emit) {
     selectedNumber = event.number;
-    if (_isCellSelected()) emit(SelectedNumber(event.number, selectedCell!));
+    if (_isCellSelected()) emit(SelectedNumberState(event.number, selectedCell!));
   }
 
-  _candidateSwitched(CandidateSwitched event, Emitter<SudokuState> emit) {
+  _candidateSwitched(CandidateSwitchedEvent event, Emitter<SudokuState> emit) {
     candidate = !candidate;
-    emit(SwitchCandidate(candidate));
+    emit(SwitchCandidateState(candidate));
   }
 
-  _cleanSelectedCell(CleanCell event, Emitter<SudokuState> emit) {
+  _cleanSelectedCell(CleanCellEvent event, Emitter<SudokuState> emit) {
     selectedNumber = 0;
     if (_isCellSelected() && _isNumberSelected()) {
-      emit(SelectedNumber(selectedNumber!, selectedCell!));
+      emit(SelectedNumberState(selectedNumber!, selectedCell!));
     }
   }
 

@@ -35,14 +35,14 @@ class _NumberWidgetState extends State<NumberWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        BlocProvider.of<SudokuBloc>(context).add(NumberSelected(widget.number));
+        BlocProvider.of<SudokuBloc>(context).add(NumberSelectedEvent(widget.number));
       },
       child: BlocBuilder<SudokuBloc, SudokuState>(
-        buildWhen: (ctx, state) => state is SwitchCandidate,
+        buildWhen: (ctx, state) => state is SwitchCandidateState,
         builder: (context, state) {
           Color color =
               Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
-          if (state is SwitchCandidate && state.candidate) {
+          if (state is SwitchCandidateState && state.candidate) {
             color = Colors.grey;
           }
           return Text(
