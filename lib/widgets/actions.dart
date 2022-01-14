@@ -50,6 +50,7 @@ class CandidateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SudokuBloc, SudokuState>(
+      buildWhen: (ctx, state) => state is SwitchCandidate,
       builder: (context, state) {
         var color =
             Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
@@ -75,7 +76,7 @@ class ActionButton extends StatelessWidget {
   final IconData icon;
   final String message;
   final onTab;
-  final color;
+  final Color color;
 
   const ActionButton({
     Key? key,
