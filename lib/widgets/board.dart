@@ -23,7 +23,7 @@ class BoardWidget extends StatelessWidget {
       children: [
         Column(
           children: [
-            for(var column = 0; column<defaultBoardSize; column ++)
+            for (var column = 0; column < defaultBoardSize; column++)
               CellRow(cells: columns[column])
           ],
         ),
@@ -57,11 +57,12 @@ class CellWidget extends StatefulWidget {
 class _CellWidgetState extends State<CellWidget> {
   _CellWidgetState();
 
+  final size = 70.0;
+  Cell? cell;
+
   @override
   Widget build(BuildContext context) {
-    const size = 70.0;
     final border = _buildBorder();
-    var number = 0;
 
     return InkWell(
       onTap: () {
@@ -69,33 +70,35 @@ class _CellWidgetState extends State<CellWidget> {
       },
       child: BlocBuilder<SudokuBloc, SudokuState>(
         buildWhen: (ctx, state) {
-          return state is SelectedCellState || state is SelectedNumberState;
+          return (state is SelectedCellState || state is SelectedNumberState);
         },
         builder: (context, state) {
           var boxDecoration = BoxDecoration(border: border);
-          if (state is SelectedCellState) {
+          if (state is CellInfo) {
             final color = _buildCellColor(state);
             boxDecoration = BoxDecoration(border: border, color: color);
           }
 
-          if (state is SelectedNumberState) {
-            if (state.id == widget.id) {
-              number = state.number;
-            }
+          if (state is SelectedNumberState && state.id == widget.id) {
+            cell = state.cell;
           }
 
           return Container(
             height: size,
             width: size,
             decoration: boxDecoration,
-            child: NumberedCell(number: number),
+            child: cell?.candidate ?? false
+                ? CandidatesWidget(
+                    candidates: cell?.candidates ?? Candidates(),
+                  )
+                : NumberedCell(number: cell?.number ?? 0),
           );
         },
       ),
     );
   }
 
-  Color _buildCellColor(SelectedCellState state) {
+  Color _buildCellColor(CellInfo state) {
     if (state.id == widget.id) {
       return Colors.indigo;
     } else if (state.id.column == widget.id.column) {
@@ -149,37 +152,41 @@ class NumberedCell extends StatelessWidget {
 }
 
 class CandidatesWidget extends StatelessWidget {
+  final Candidates candidates;
+
   const CandidatesWidget({
     Key? key,
+    required this.candidates,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var candidatesStr = candidates.toString();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            CandidateNumberWidget(number: 1),
-            CandidateNumberWidget(number: 2),
-            CandidateNumberWidget(number: 3),
+          children: [
+            CandidateNumberWidget(number: candidatesStr[0]),
+            CandidateNumberWidget(number: candidatesStr[1]),
+            CandidateNumberWidget(number: candidatesStr[2]),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            CandidateNumberWidget(number: 4),
-            CandidateNumberWidget(number: 5),
-            CandidateNumberWidget(number: 6),
+          children: [
+            CandidateNumberWidget(number: candidatesStr[3]),
+            CandidateNumberWidget(number: candidatesStr[4]),
+            CandidateNumberWidget(number: candidatesStr[5]),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            CandidateNumberWidget(number: 7),
-            CandidateNumberWidget(number: 8),
-            CandidateNumberWidget(number: 9),
+          children: [
+            CandidateNumberWidget(number: candidatesStr[6]),
+            CandidateNumberWidget(number: candidatesStr[7]),
+            CandidateNumberWidget(number: candidatesStr[8]),
           ],
         ),
       ],
@@ -188,7 +195,7 @@ class CandidatesWidget extends StatelessWidget {
 }
 
 class CandidateNumberWidget extends StatelessWidget {
-  final int number;
+  final String number;
 
   const CandidateNumberWidget({Key? key, required this.number})
       : super(key: key);
@@ -196,7 +203,7 @@ class CandidateNumberWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '$number',
+      number == '0' ? '' : number,
       style: const TextStyle(color: Colors.grey, fontSize: 19),
     );
   }

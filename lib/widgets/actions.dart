@@ -75,7 +75,7 @@ class CandidateButton extends StatelessWidget {
 class ActionButton extends StatelessWidget {
   final IconData icon;
   final String message;
-  final onTab;
+  final Function(BuildContext) onTab;
   final Color color;
 
   const ActionButton({

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
@@ -29,6 +31,8 @@ class NumberWidget extends StatefulWidget {
   @override
   State<NumberWidget> createState() => _NumberWidgetState();
 }
+
+final rng = Random();
 
 class _NumberWidgetState extends State<NumberWidget> {
   @override

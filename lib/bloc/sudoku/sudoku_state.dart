@@ -9,22 +9,31 @@ class SudokuInitial extends SudokuState {
   List<Object> get props => [];
 }
 
-class SelectedCellState extends SudokuState {
+abstract class CellInfo extends SudokuState {
   final CellId id;
 
-  const SelectedCellState(this.id);
+  const CellInfo(this.id);
 
   @override
   List<Object> get props => [id];
 }
 
-class SelectedNumberState extends SelectedCellState {
-  final int number;
+class SelectedCellState extends CellInfo {
 
-  const SelectedNumberState(this.number, CellId cellId) : super(cellId);
+  const SelectedCellState(CellId id) : super(id);
 
   @override
-  List<Object> get props => [number, super.id];
+  List<Object> get props => [id];
+}
+
+class SelectedNumberState extends CellInfo {
+  final Cell cell;
+
+  const SelectedNumberState(CellId cellId, this.cell)
+      : super(cellId);
+
+  @override
+  List<Object> get props => [cell, id];
 }
 
 class SwitchCandidateState extends SudokuState {
