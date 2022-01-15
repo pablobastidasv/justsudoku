@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
 
 class HelpersWidget extends StatelessWidget {
   const HelpersWidget({Key? key}) : super(key: key);
@@ -13,14 +11,14 @@ class HelpersWidget extends StatelessWidget {
         ActionButton(
           icon: Icons.undo,
           message: "Undo",
-          onTab: (ctx) {},
+          onTab: () {},
         ),
         const EraseButton(),
         const CandidateButton(),
         ActionButton(
           icon: Icons.lightbulb,
           message: "Hint",
-          onTab: (ctx) {},
+          onTab: () {},
         ),
       ],
     );
@@ -35,12 +33,8 @@ class EraseButton extends StatelessWidget {
     return ActionButton(
       icon: Icons.clear,
       message: "Erase",
-      onTab: _cleanCell,
+      onTab: (){},
     );
-  }
-
-  _cleanCell(BuildContext ctx) {
-    BlocProvider.of<SudokuBloc>(ctx).add(CleanCellEvent());
   }
 }
 
@@ -49,33 +43,21 @@ class CandidateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SudokuBloc, SudokuState>(
-      buildWhen: (ctx, state) => state is SwitchCandidateState,
-      builder: (context, state) {
-        var color =
-            Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
-        if (state is SwitchCandidateState && state.candidate) {
-          color = Colors.grey;
-        }
-
-        return ActionButton(
-          icon: Icons.edit,
-          message: "Candidate",
-          onTab: (ctx) => _switchCandidate(ctx),
-          color: color,
-        );
-      },
+    var color = Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
+    return ActionButton(
+      icon: Icons.edit,
+      message: "Candidate",
+      onTab: () => {},
+      color: color,
     );
   }
-
-  _switchCandidate(BuildContext context) =>
-      BlocProvider.of<SudokuBloc>(context).add(CandidateSwitchedEvent());
 }
 
 class ActionButton extends StatelessWidget {
   final IconData icon;
   final String message;
-  final Function(BuildContext) onTab;
+  // final Function(BuildContext) onTab;
+  final Function() onTab;
   final Color color;
 
   const ActionButton({
@@ -91,7 +73,7 @@ class ActionButton extends StatelessWidget {
     return Column(
       children: [
         IconButton(
-          onPressed: () => onTab(context),
+          onPressed: () {},
           icon: Icon(
             icon,
             color: color,

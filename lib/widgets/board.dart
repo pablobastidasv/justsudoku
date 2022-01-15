@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_sudoku/bloc/sudoku/sudoku_bloc.dart';
 import 'package:just_sudoku/model/board.dart';
 
 class BoardWidget extends StatelessWidget {
@@ -63,50 +61,21 @@ class _CellWidgetState extends State<CellWidget> {
   @override
   Widget build(BuildContext context) {
     final border = _buildBorder();
+    final boxDecoration = BoxDecoration(border: border);
 
     return InkWell(
-      onTap: () {
-        BlocProvider.of<SudokuBloc>(context).add(CellSelectedEvent(widget.id));
-      },
-      child: BlocBuilder<SudokuBloc, SudokuState>(
-        buildWhen: (ctx, state) {
-          return (state is SelectedCellState || state is SelectedNumberState);
-        },
-        builder: (context, state) {
-          var boxDecoration = BoxDecoration(border: border);
-          if (state is CellInfo) {
-            final color = _buildCellColor(state);
-            boxDecoration = BoxDecoration(border: border, color: color);
-          }
-
-          if (state is SelectedNumberState && state.id == widget.id) {
-            cell = state.cell;
-          }
-
-          return Container(
-            height: size,
-            width: size,
-            decoration: boxDecoration,
-            child: cell?.candidate ?? false
-                ? CandidatesWidget(
-                    candidates: cell?.candidates ?? Candidates(),
-                  )
-                : NumberedCell(number: cell?.number ?? 0),
-          );
-        },
+      onTap: () {},
+      child: Container(
+        height: size,
+        width: size,
+        decoration: boxDecoration,
+        child: cell?.candidate ?? false
+            ? CandidatesWidget(
+                candidates: cell?.candidates ?? Candidates(),
+              )
+            : NumberedCell(number: cell?.number ?? 0),
       ),
     );
-  }
-
-  Color _buildCellColor(CellInfo state) {
-    if (state.id == widget.id) {
-      return Colors.indigo;
-    } else if (state.id.column == widget.id.column) {
-      return Colors.lightBlueAccent;
-    } else if (state.id.row == widget.id.row) {
-      return Colors.lightBlueAccent;
-    }
-    return Theme.of(context).scaffoldBackgroundColor;
   }
 
   Border _buildBorder() {
