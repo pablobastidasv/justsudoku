@@ -25,10 +25,10 @@ class BoardModel with ChangeNotifier {
     );
   }
 
-  selectCell(CellId id){
+  selectCell(CellId id) {
     for (var column in columns) {
       for (var cell in column) {
-        if(cell.id == id){
+        if (cell.id == id) {
           cell.markSelected();
           selected = cell;
         } else {
@@ -38,12 +38,13 @@ class BoardModel with ChangeNotifier {
     }
   }
 
-  numberSelected(String number){
+  numberSelected(String number) {
     selected?.defineFixedValue(number);
   }
 
-  switchCandidate(){
-
+  switchCandidate() {
+    candidateEnabled = !candidateEnabled;
+    notifyListeners();
   }
 }
 
@@ -53,6 +54,10 @@ class CellModel with ChangeNotifier {
   String number;
   String candidates;
   bool selected;
+
+  bool get isCandidate => number == '0';
+
+  bool get isFixed => !isCandidate;
 
   CellModel({
     required this.id,
@@ -83,10 +88,6 @@ class CellModel with ChangeNotifier {
     number = number == value ? '0' : value;
     notifyListeners();
   }
-
-  bool get isCandidate => number == '0';
-
-  bool get isFixed => !isCandidate;
 
   void markSelected() {
     selected = true;

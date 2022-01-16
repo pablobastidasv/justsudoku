@@ -31,15 +31,18 @@ class NumberWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final candidateEnabled =
+        context.select<BoardModel, bool>((board) => board.candidateEnabled);
+
     return InkWell(
       onTap: () => Provider.of<BoardModel>(context, listen: false)
           .numberSelected(number),
       child: Text(
         number,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontSize: 48,
-        ),
+        style: TextStyle(
+            fontSize: 48,
+            color: candidateEnabled ? Colors.grey : Colors.lightBlueAccent),
       ),
     );
   }
