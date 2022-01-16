@@ -178,10 +178,11 @@ class CandidateNumberWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = Colors.grey; // TODO: Candidate numbers
+    const color = Color(0x95030303); // TODO: Candidate numbers
     return Text(
       number == '0' ? '' : number,
       style: const TextStyle(color: color, fontSize: 19),
+      textAlign: TextAlign.center,
     );
   }
 }

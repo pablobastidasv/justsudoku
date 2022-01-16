@@ -49,7 +49,7 @@ class CandidateButton extends StatelessWidget {
         context.select<BoardModel, bool>((board) => board.candidateEnabled);
 
     var color = candidateEnabled
-        ? Colors.grey
+        ? const Color(0x95030303) // TODO: Candidate number
         : Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
     return ActionButton(
       icon: Icons.edit,

@@ -42,7 +42,10 @@ class NumberWidget extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 48,
-            color: candidateEnabled ? Colors.grey : Colors.lightBlueAccent),
+            color: candidateEnabled
+                ? const Color(0x95030303) // TODO: Candidate number
+                : const Color(0xDA001AFF) // TODO: Defined number
+        ),
       ),
     );
   }
