@@ -46,6 +46,10 @@ class BoardModel with ChangeNotifier {
     }
   }
 
+  eraseCell(){
+    selected?.defineFixedValue('0');
+  }
+
   switchCandidate() {
     candidateEnabled = !candidateEnabled;
     notifyListeners();
