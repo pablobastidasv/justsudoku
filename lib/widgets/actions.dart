@@ -9,19 +9,9 @@ class HelpersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        ActionButton(
-          icon: Icons.undo,
-          message: "Undo",
-          onTab: () {},
-        ),
-        const EraseButton(),
-        const CandidateButton(),
-        ActionButton(
-          icon: Icons.lightbulb,
-          message: "Hint",
-          onTab: () {},
-        ),
+      children: const [
+        EraseButton(),
+        CandidateButton(),
       ],
     );
   }
