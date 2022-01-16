@@ -41,7 +41,10 @@ class BoardModel with ChangeNotifier {
       selected?.defineCandidate(int.parse(number));
     } else {
       selected?.defineFixedValue(number);
+      candidateEnabled = true;
+      notifyListeners();
     }
+
   }
 
   eraseCell() {
