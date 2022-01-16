@@ -39,7 +39,11 @@ class BoardModel with ChangeNotifier {
   }
 
   numberSelected(String number) {
-    selected?.defineFixedValue(number);
+    if (candidateEnabled) {
+      selected?.defineCandidate(int.parse(number));
+    } else {
+      selected?.defineFixedValue(number);
+    }
   }
 
   switchCandidate() {
@@ -68,7 +72,7 @@ class CellModel with ChangeNotifier {
   });
 
   defineCandidate(int value) {
-    if (isFixed) return; // Number already fixed, candidate ignored.
+    if (isFixed) number = '0';
 
     final index = value - 1;
     final actual = candidates[index];
@@ -85,6 +89,7 @@ class CellModel with ChangeNotifier {
   }
 
   defineFixedValue(String value) {
+    candidates = "000000000";
     number = number == value ? '0' : value;
     notifyListeners();
   }
