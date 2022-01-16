@@ -58,12 +58,15 @@ class CellWidget extends StatelessWidget {
 
     final boardModel = context.watch<BoardModel>();
     final cellModel = context.watch<CellModel>();
+    final color = cellModel.selected
+        ? const Color(0x920098EE) // TODO: selected
+        : cellModel.highlighted
+            ? const Color(0x320098EE) // TODO: highlighted
+            : Colors.white70;
 
     final cellId = cellModel.id;
     final border = _buildBorder(cellId);
-    final boxDecoration = BoxDecoration(
-        border: border,
-        color: cellModel.selected ? Colors.blue : Colors.white70);
+    final boxDecoration = BoxDecoration(border: border, color: color);
 
     return InkWell(
       onTap: () => boardModel.selectCell(cellModel.id),
@@ -111,12 +114,14 @@ class NumberedCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const color = Color(0xDA001AFF); // TODO: defined number
     final String data = number == '0' ? '' : number;
+
     return Center(
       child: Text(
         data,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 48),
+        style: const TextStyle(fontSize: 48, color: color),
       ),
     );
   }
@@ -173,9 +178,10 @@ class CandidateNumberWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const color = Colors.grey; // TODO: Candidate numbers
     return Text(
       number == '0' ? '' : number,
-      style: const TextStyle(color: Colors.grey, fontSize: 19),
+      style: const TextStyle(color: color, fontSize: 19),
     );
   }
 }

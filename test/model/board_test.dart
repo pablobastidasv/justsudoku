@@ -53,4 +53,17 @@ void main() {
 
     expect('0', cell.number);
   });
+
+  test('selected cell is from same region, hightlighted is true', (){
+
+    const selected = CellId(5, 3);
+    final cell = CellModel(
+      id: const CellId(3, 5),
+    );
+
+    cell.mark(selected);
+
+    expect(true, cell.highlighted);
+    expect(false, cell.selected);
+  });
 }
