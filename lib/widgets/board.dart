@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:just_sudoku/model/board.dart';
+import 'package:provider/provider.dart';
 
 class BoardWidget extends StatelessWidget {
   const BoardWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final board = context.watch<BoardModel>();
+
     final columns = List.generate(
-      defaultBoardSize,
+      board.columns.length,
       (row) => List.generate(
-        defaultBoardSize,
-        (column) => CellWidget(id: CellId(column, row)),
+        board.columns[row].length,
+        (column) => ChangeNotifierProvider<CellModel>.value(
+          value: board.columns[column][row],
+          child: const CellWidget(),
+        ),
         growable: false,
       ),
       growable: false,
@@ -21,7 +27,7 @@ class BoardWidget extends StatelessWidget {
       children: [
         Column(
           children: [
-            for (var column = 0; column < defaultBoardSize; column++)
+            for (var column = 0; column < columns.length; column++)
               CellRow(cells: columns[column])
           ],
         ),
@@ -31,7 +37,7 @@ class BoardWidget extends StatelessWidget {
 }
 
 class CellRow extends StatelessWidget {
-  final List<CellWidget> cells;
+  final List<ChangeNotifierProvider> cells;
 
   const CellRow({Key? key, required this.cells}) : super(key: key);
 
@@ -43,42 +49,38 @@ class CellRow extends StatelessWidget {
   }
 }
 
-class CellWidget extends StatefulWidget {
-  final CellId id;
-
-  const CellWidget({Key? key, required this.id}) : super(key: key);
-
-  @override
-  State<CellWidget> createState() => _CellWidgetState();
-}
-
-class _CellWidgetState extends State<CellWidget> {
-  _CellWidgetState();
-
-  final size = 70.0;
-  Cell? cell;
+class CellWidget extends StatelessWidget {
+  const CellWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final border = _buildBorder();
-    final boxDecoration = BoxDecoration(border: border);
+    const size = 70.0;
+
+    final boardModel = context.watch<BoardModel>();
+    final cellModel = context.watch<CellModel>();
+
+    final cellId = cellModel.id;
+    final border = _buildBorder(cellId);
+    final boxDecoration = BoxDecoration(
+        border: border,
+        color: cellModel.selected ? Colors.blue : Colors.white70);
 
     return InkWell(
-      onTap: () {},
+      onTap: () => boardModel.selectCell(cellModel.id),
       child: Container(
         height: size,
         width: size,
         decoration: boxDecoration,
-        child: cell?.candidate ?? false
+        child: cellModel.isCandidate
             ? CandidatesWidget(
-                candidates: cell?.candidates ?? Candidates(),
+                candidates: cellModel.candidates,
               )
-            : NumberedCell(number: cell?.number ?? 0),
+            : NumberedCell(number: cellModel.number),
       ),
     );
   }
 
-  Border _buildBorder() {
+  Border _buildBorder(CellId id) {
     const soft = BorderSide(width: 0.2);
     const strong = BorderSide(width: 1.8);
 
@@ -87,11 +89,11 @@ class _CellWidgetState extends State<CellWidget> {
     var right = soft;
     var bottom = soft;
 
-    if (widget.id.column == 0) left = strong;
-    if (widget.id.row == 0) top = strong;
+    if (id.column == 0) left = strong;
+    if (id.row == 0) top = strong;
 
-    if ((widget.id.column + 1) % 3 == 0) right = strong;
-    if ((widget.id.row + 1) % 3 == 0) bottom = strong;
+    if ((id.column + 1) % 3 == 0) right = strong;
+    if ((id.row + 1) % 3 == 0) bottom = strong;
 
     return Border(
       top: top,
@@ -103,13 +105,13 @@ class _CellWidgetState extends State<CellWidget> {
 }
 
 class NumberedCell extends StatelessWidget {
-  final int number;
+  final String number;
 
   const NumberedCell({Key? key, required this.number}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String data = number == 0 ? '' : '$number';
+    final String data = number == '0' ? '' : number;
     return Center(
       child: Text(
         data,
@@ -121,7 +123,7 @@ class NumberedCell extends StatelessWidget {
 }
 
 class CandidatesWidget extends StatelessWidget {
-  final Candidates candidates;
+  final String candidates;
 
   const CandidatesWidget({
     Key? key,

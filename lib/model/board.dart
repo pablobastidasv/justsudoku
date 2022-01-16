@@ -1,91 +1,102 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 const defaultBoardSize = 9;
 
-class Board {
-  late final List<List<Cell>> columns;
+class BoardModel with ChangeNotifier {
+  late final List<List<CellModel>> columns;
+  CellModel? selected;
+  bool candidateEnabled = false;
 
-  Board({int boardSize = defaultBoardSize}) {
+  BoardModel({int boardSize = defaultBoardSize}) {
     columns = List.generate(
       boardSize,
       (column) => List.generate(
         boardSize,
-        (row) => Cell(column, row),
+        (row) => CellModel(
+          id: CellId(
+            column,
+            row,
+          ),
+        ),
         growable: false,
       ),
       growable: false,
     );
   }
+
+  selectCell(CellId id){
+    for (var column in columns) {
+      for (var cell in column) {
+        if(cell.id == id){
+          cell.markSelected();
+          selected = cell;
+        } else {
+          cell.markUnSelected();
+        }
+      }
+    }
+  }
+
+  numberSelected(String number){
+    selected?.defineFixedValue(number);
+  }
+
+  switchCandidate(){
+
+  }
 }
 
-class Cell extends Equatable {
-  late final CellId id;
-  final int number;
-  late final Candidates candidates;
-  final bool candidate;
+class CellModel with ChangeNotifier {
+  final CellId id;
+  final bool isClue;
+  String number;
+  String candidates;
+  bool selected;
 
-  Cell(
-    int column,
-    int row, {
-    this.number = 0,
-    this.candidate = false,
-    Candidates? candidates,
-  }) {
-    id = CellId(column, row);
-    this.candidates = candidates ?? Candidates();
+  CellModel({
+    required this.id,
+    this.isClue = false,
+    this.candidates = "000000000",
+    this.number = '0',
+    this.selected = false,
+  });
+
+  defineCandidate(int value) {
+    if (isFixed) return; // Number already fixed, candidate ignored.
+
+    final index = value - 1;
+    final actual = candidates[index];
+    final replaceValue = actual == '0' ? '$value' : '0';
+
+    candidates = candidates.replaceRange(index, index + 1, replaceValue);
+
+    notifyListeners();
   }
 
-  copyWith({
-    int? number,
-    Candidates? candidates,
-    bool? candidate,
-  }) {
-    return Cell(
-      id.column,
-      id.row,
-      number: number ?? this.number,
-      candidates: candidates ?? this.candidates,
-      candidate: candidate ?? this.candidate,
-    );
+  switchSelectedState() {
+    selected = !selected;
+    notifyListeners();
   }
 
-  @override
-  List<Object> get props => [number, candidates, candidate];
-}
-
-class Candidates {
-  List<String> _candidates = List.filled(defaultBoardSize, '0');
-
-  Candidates();
-
-  factory Candidates.from(String number) {
-    final candidates = Candidates();
-    candidates._candidates = number.split('');
-    return candidates;
+  defineFixedValue(String value) {
+    number = number == value ? '0' : value;
+    notifyListeners();
   }
 
-  update(int number) {
-    assert(number > 0 && number <= defaultBoardSize);
+  bool get isCandidate => number == '0';
 
-    _candidates[number - 1] == '0'
-        ? _candidates[number - 1] = '$number'
-        : _candidates[number - 1] = '0';
+  bool get isFixed => !isCandidate;
+
+  void markSelected() {
+    selected = true;
+    notifyListeners();
   }
 
-  @override
-  String toString() {
-    return _candidates.join();
+  void markUnSelected() {
+    selected = false;
+    notifyListeners();
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Candidates &&
-          runtimeType == other.runtimeType &&
-          _candidates == other._candidates;
-
-  @override
-  int get hashCode => _candidates.hashCode;
 }
 
 class CellId extends Equatable {
