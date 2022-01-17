@@ -55,11 +55,12 @@ void main() {
     expect('0', cell.number);
   });
 
-  test('selected cell is from same region, hightlighted is true', (){
-
-    const selected = CellId(5, 3);
+  test('selected cell is from same region, hightlighted is true', () {
     final cell = CellModel(
       id: const CellId(3, 5),
+    );
+    final selected = CellModel(
+      id: const CellId(5, 3),
     );
 
     cell.mark(selected);
@@ -68,7 +69,7 @@ void main() {
     expect(false, cell.selected);
   });
 
-  test('nothing', (){
+  test('nothing', () {
     var sudokuGenerator = SudokuGenerator(emptySquares: 54);
     SudokuUtilities.printSudoku(sudokuGenerator.newSudoku);
     print(''); // ignore: avoid_print

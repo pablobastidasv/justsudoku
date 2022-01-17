@@ -58,13 +58,15 @@ class CellWidget extends StatelessWidget {
 
     final boardModel = context.watch<BoardModel>();
     final cellModel = context.watch<CellModel>();
-    final color = cellModel.selected
-        ? const Color(0x920098EE) // TODO: selected
-        : cellModel.highlighted
-            ? const Color(0x160098EE) // TODO: highlighted
-            : cellModel.indirectlyHighlighted
-                ? const Color(0x4F0098EE) // TODO: same number selected
-                : Colors.white70;
+    final color = cellModel.error
+        ? Colors.red
+        : cellModel.selected
+            ? const Color(0x920098EE) // TODO: selected
+            : cellModel.highlighted
+                ? const Color(0x160098EE) // TODO: highlighted
+                : cellModel.indirectlyHighlighted
+                    ? const Color(0x4F0098EE) // TODO: same number selected
+                    : Colors.white70;
 
     final cellId = cellModel.id;
     final border = _buildBorder(cellId);
@@ -83,6 +85,8 @@ class CellWidget extends StatelessWidget {
             : NumberedCell(
                 number: cellModel.number,
                 isClue: cellModel.isClue,
+                error: cellModel.error,
+                relatedError: cellModel.relatedError,
               ),
       ),
     );
@@ -115,18 +119,26 @@ class CellWidget extends StatelessWidget {
 class NumberedCell extends StatelessWidget {
   final String number;
   final bool isClue;
+  final bool error;
+  final bool relatedError;
 
   const NumberedCell({
     Key? key,
     required this.number,
     required this.isClue,
+    required this.error,
+    required this.relatedError,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final color = isClue
-        ? Colors.black // TODO: define clue color
-        : const Color(0xDA001AFF); // TODO: defined number
+    final color = error
+        ? Colors.white
+        : relatedError
+            ? Colors.pink
+            : isClue
+                ? Colors.black // TODO: define clue color
+                : const Color(0xDA001AFF); // TODO: defined number
     final String data = number == '0' ? '' : number;
 
     return Center(
