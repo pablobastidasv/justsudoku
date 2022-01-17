@@ -78,7 +78,10 @@ class CellWidget extends StatelessWidget {
             ? CandidatesWidget(
                 candidates: cellModel.candidates,
               )
-            : NumberedCell(number: cellModel.number),
+            : NumberedCell(
+                number: cellModel.number,
+                isClue: cellModel.isClue,
+              ),
       ),
     );
   }
@@ -109,19 +112,26 @@ class CellWidget extends StatelessWidget {
 
 class NumberedCell extends StatelessWidget {
   final String number;
+  final bool isClue;
 
-  const NumberedCell({Key? key, required this.number}) : super(key: key);
+  const NumberedCell({
+    Key? key,
+    required this.number,
+    required this.isClue,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const color = Color(0xDA001AFF); // TODO: defined number
+    final color = isClue
+        ? Colors.black // TODO: define clue color
+        : const Color(0xDA001AFF); // TODO: defined number
     final String data = number == '0' ? '' : number;
 
     return Center(
       child: Text(
         data,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 48, color: color),
+        style: TextStyle(fontSize: 48, color: color),
       ),
     );
   }

@@ -45,7 +45,7 @@ class LevelButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const SudokuPage(),
+              builder: (context) => SudokuPage(level: level),
             ),
           );
         },
@@ -56,18 +56,4 @@ class LevelButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class Level {
-  final int number;
-
-  Level(this.number);
-
-  factory Level.easy() => Level(18);
-
-  factory Level.medium() => Level(27);
-
-  factory Level.hard() => Level(36);
-
-  factory Level.expert() => Level(54);
 }

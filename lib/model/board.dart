@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 const defaultBoardSize = 9;
 
@@ -8,21 +9,26 @@ class BoardModel with ChangeNotifier {
   CellModel? selected;
   bool candidateEnabled = false;
 
-  BoardModel({int boardSize = defaultBoardSize}) {
-    columns = List.generate(
-      boardSize,
-      (column) => List.generate(
-        boardSize,
-        (row) => CellModel(
-          id: CellId(
-            column,
-            row,
-          ),
-        ),
-        growable: false,
-      ),
-      growable: false,
-    );
+  BoardModel({
+    int boardSize = defaultBoardSize,
+    required int level,
+  }) {
+    final generator = SudokuGenerator(emptySquares: level);
+    final values = generator.newSudoku;
+    final solved = generator.newSudokuSolved;
+
+    columns = [
+      for (var column = 0; column < values.length; column++)
+        [
+          for (var row = 0; row < values[column].length; row++)
+            CellModel(
+              id: CellId(column, row),
+              number: '${values[column][row]}',
+              solution: '${solved[column][row]}',
+              isClue: values[column][row] != 0,
+            )
+        ]
+    ];
   }
 
   selectCell(CellId id) {
@@ -44,7 +50,6 @@ class BoardModel with ChangeNotifier {
       candidateEnabled = true;
       notifyListeners();
     }
-
   }
 
   eraseCell() {
@@ -60,6 +65,8 @@ class BoardModel with ChangeNotifier {
 class CellModel with ChangeNotifier {
   final CellId id;
   final bool isClue;
+  final String solution;
+
   String number;
   String candidates;
   bool selected;
@@ -74,11 +81,13 @@ class CellModel with ChangeNotifier {
     this.isClue = false,
     this.candidates = "000000000",
     this.number = '0',
+    this.solution = '0',
     this.selected = false,
     this.highlighted = false,
   });
 
   defineCandidate(int value) {
+    if (isClue) return;
     if (isFixed) number = '0';
 
     final index = value - 1;
@@ -96,6 +105,7 @@ class CellModel with ChangeNotifier {
   }
 
   defineFixedValue(String value) {
+    if (isClue) return;
     candidates = "000000000";
     number = number == value ? '0' : value;
     notifyListeners();

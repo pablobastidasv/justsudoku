@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:just_sudoku/pages/sudoku_page.dart';
 
 class InformationWidget extends StatelessWidget {
-  const InformationWidget({Key? key}) : super(key: key);
+  final Level level;
+
+  const InformationWidget({Key? key, required this.level}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: const [Text('Hard'), Text('Mistakes: 0/3'), Text('24:23')],
+      children: [
+        _buildLevelInfo(),
+      ],
     );
+  }
+
+  Widget _buildLevelInfo() {
+    if (level == Level.easy()) return const Text('Fácil');
+    if (level == Level.medium()) return const Text('Medio');
+    if (level == Level.hard()) return const Text('Difícil');
+    return const Text('Experto');
   }
 }

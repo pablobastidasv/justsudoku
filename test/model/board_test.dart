@@ -73,6 +73,5 @@ void main() {
     SudokuUtilities.printSudoku(sudokuGenerator.newSudoku);
     print(''); // ignore: avoid_print
     SudokuUtilities.printSudoku(sudokuGenerator.newSudokuSolved);
-
   });
 }
