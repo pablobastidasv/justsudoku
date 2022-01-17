@@ -31,11 +31,11 @@ class BoardModel with ChangeNotifier {
     ];
   }
 
-  selectCell(CellId id) {
+  selectCell(CellModel selectedCell) {
     for (var column in columns) {
       for (var cell in column) {
-        cell.mark(id);
-        if (cell.id == id) {
+        cell.mark(selectedCell);
+        if (cell.id == selectedCell.id) {
           selected = cell;
         }
       }
@@ -48,6 +48,7 @@ class BoardModel with ChangeNotifier {
     } else {
       selected?.defineFixedValue(number);
       candidateEnabled = true;
+      if(selected != null) selectCell(selected!);
       notifyListeners();
     }
   }
@@ -71,6 +72,7 @@ class CellModel with ChangeNotifier {
   String candidates;
   bool selected;
   bool highlighted;
+  bool indirectlyHighlighted;
 
   bool get isCandidate => number == '0';
 
@@ -84,6 +86,7 @@ class CellModel with ChangeNotifier {
     this.solution = '0',
     this.selected = false,
     this.highlighted = false,
+    this.indirectlyHighlighted = false,
   });
 
   defineCandidate(int value) {
@@ -121,16 +124,19 @@ class CellModel with ChangeNotifier {
     notifyListeners();
   }
 
-  mark(CellId selected) {
-    this.selected = false;
+  mark(CellModel selectedCell) {
+    final selectedCellId = selectedCell.id;
+    selected = false;
     highlighted = false;
+    indirectlyHighlighted = false;
 
-    if (selected == id) {
-      this.selected = true;
-    } else if (isRelated(selected)) {
+    if (selectedCellId == id) {
+      selected = true;
+    } else if (isRelated(selectedCellId)) {
       highlighted = true;
+    } else if (number != '0' && selectedCell.number == number) {
+      indirectlyHighlighted = true;
     }
-
     notifyListeners();
   }
 

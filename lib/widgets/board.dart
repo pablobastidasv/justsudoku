@@ -61,15 +61,17 @@ class CellWidget extends StatelessWidget {
     final color = cellModel.selected
         ? const Color(0x920098EE) // TODO: selected
         : cellModel.highlighted
-            ? const Color(0x320098EE) // TODO: highlighted
-            : Colors.white70;
+            ? const Color(0x160098EE) // TODO: highlighted
+            : cellModel.indirectlyHighlighted
+                ? const Color(0x4F0098EE) // TODO: same number selected
+                : Colors.white70;
 
     final cellId = cellModel.id;
     final border = _buildBorder(cellId);
     final boxDecoration = BoxDecoration(border: border, color: color);
 
     return InkWell(
-      onTap: () => boardModel.selectCell(cellModel.id),
+      onTap: () => boardModel.selectCell(cellModel),
       child: Container(
         height: size,
         width: size,
