@@ -37,6 +37,8 @@ dependencies:
   equatable: ^2.0.3
   provider: ^6.0.2
 
+  sudoku_solver_generator: ^2.1.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

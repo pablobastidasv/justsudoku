@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:just_sudoku/model/board.dart';
+import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 void main() {
   test('defining candidate in cell change the candidates string', () {
@@ -65,5 +66,13 @@ void main() {
 
     expect(true, cell.highlighted);
     expect(false, cell.selected);
+  });
+
+  test('nothing', (){
+    var sudokuGenerator = SudokuGenerator(emptySquares: 54);
+    SudokuUtilities.printSudoku(sudokuGenerator.newSudoku);
+    print(''); // ignore: avoid_print
+    SudokuUtilities.printSudoku(sudokuGenerator.newSudokuSolved);
+
   });
 }
