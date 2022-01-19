@@ -12,10 +12,10 @@ class HelloPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            LevelButton(label: "Principiante", level: Level.beginner()),
             LevelButton(label: "Fácil", level: Level.easy()),
             LevelButton(label: "Medio", level: Level.medium()),
             LevelButton(label: "Difícil", level: Level.hard()),
-            LevelButton(label: "Experto", level: Level.expert()),
           ],
         ),
       ),

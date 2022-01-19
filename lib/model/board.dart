@@ -8,6 +8,7 @@ class BoardModel with ChangeNotifier {
   late final List<List<CellModel>> columns;
   CellModel? selected;
   bool candidateEnabled = false;
+  bool solved = false;
 
   BoardModel({
     int boardSize = defaultBoardSize,
@@ -42,6 +43,18 @@ class BoardModel with ChangeNotifier {
     }
   }
 
+  _evaluateSolved() {
+    for (var column in columns) {
+      for (var cell in column) {
+        if(cell.number == '0' || cell.error) {
+          return;
+        }
+      }
+    }
+
+    solved =  true;
+  }
+
   numberSelected(String number) {
     if (candidateEnabled) {
       selected?.defineCandidate(int.parse(number));
@@ -49,6 +62,7 @@ class BoardModel with ChangeNotifier {
       selected?.defineFixedValue(number);
       candidateEnabled = true;
       if (selected != null) selectCell(selected!);
+      _evaluateSolved();
       notifyListeners();
     }
   }

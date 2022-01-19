@@ -18,9 +18,9 @@ class InformationWidget extends StatelessWidget {
   }
 
   Widget _buildLevelInfo() {
+    if (level == Level.beginner()) return const Text('Principiante');
     if (level == Level.easy()) return const Text('Fácil');
     if (level == Level.medium()) return const Text('Medio');
-    if (level == Level.hard()) return const Text('Difícil');
-    return const Text('Experto');
+    return const Text('Difícil');
   }
 }

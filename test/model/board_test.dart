@@ -56,12 +56,8 @@ void main() {
   });
 
   test('selected cell is from same region, hightlighted is true', () {
-    final cell = CellModel(
-      id: const CellId(3, 5),
-    );
-    final selected = CellModel(
-      id: const CellId(5, 3),
-    );
+    final cell = CellModel(id: const CellId(3, 5));
+    final selected = CellModel(id: const CellId(5, 3));
 
     cell.mark(selected);
 
