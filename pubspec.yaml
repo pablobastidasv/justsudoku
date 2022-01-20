@@ -39,6 +39,9 @@ dependencies:
 
   sudoku_solver_generator: ^2.1.0+1
 
+  confetti: ^0.6.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

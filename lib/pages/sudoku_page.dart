@@ -17,28 +17,26 @@ class SudokuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) => BoardModel(level: level.number),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.blueGrey,
-            elevation: 0,
-          ),
-          body: Stack(
-            children: [
-              Column(
-                children: [
-                  InformationWidget(level: level),
-                  const SizedBox(height: 8),
-                  const BoardWidget(),
-                  const SizedBox(height: 8),
-                  const HelpersWidget(),
-                  const SizedBox(height: 8),
-                  const NumbersWidget(),
-                ],
-              ),
-              const GameEndedWidget(),
-            ],
-          ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0x40000000),
+          elevation: 0,
+        ),
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                InformationWidget(level: level),
+                const SizedBox(height: 8),
+                const BoardWidget(),
+                const SizedBox(height: 8),
+                const HelpersWidget(),
+                const SizedBox(height: 8),
+                const NumbersWidget(),
+              ],
+            ),
+            const GameEndedWidget(),
+          ],
         ),
       ),
     );

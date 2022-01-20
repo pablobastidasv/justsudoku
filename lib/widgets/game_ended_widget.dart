@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_sudoku/model/board.dart';
 import 'package:just_sudoku/pages/hello_page.dart';
+import 'package:just_sudoku/widgets/all_confetti_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'blurrier_panel_widget.dart';
@@ -18,13 +19,15 @@ class GameEndedWidget extends StatelessWidget {
     return Visibility(
       visible: solved,
       child: SizedBox.expand(
-        child: Stack(
-          children: const [
-            BlurrierPanelWidget(),
-            Center(
-              child: _GameEndedCard(),
-            ),
-          ],
+        child: AllConfetti(
+          child: Stack(
+            children: const [
+              BlurrierPanelWidget(),
+              Center(
+                child: _GameEndedCard(),
+              ),
+            ],
+          ),
         ),
       ),
     );
