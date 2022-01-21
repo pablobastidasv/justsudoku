@@ -205,7 +205,7 @@ class CandidateNumberWidget extends StatelessWidget {
     const color = Color(0x95030303); // TODO: Candidate numbers
     return Text(
       number == '0' ? '' : number,
-      style: const TextStyle(color: color, fontSize: 19),
+      style: const TextStyle(color: color, fontSize: 18),
       textAlign: TextAlign.center,
     );
   }
