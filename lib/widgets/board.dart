@@ -54,8 +54,6 @@ class CellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const size = 70.0;
-
     final boardModel = context.watch<BoardModel>();
     final cellModel = context.watch<CellModel>();
     final color = cellModel.error
@@ -71,6 +69,7 @@ class CellWidget extends StatelessWidget {
     final cellId = cellModel.id;
     final border = _buildBorder(cellId);
     final boxDecoration = BoxDecoration(border: border, color: color);
+    final size = context.read<BoardSize>().cellSize;
 
     return InkWell(
       onTap: () => boardModel.selectCell(cellModel),
@@ -141,11 +140,12 @@ class NumberedCell extends StatelessWidget {
                 : const Color(0xDA001AFF); // TODO: defined number
     final String data = number == '0' ? '' : number;
 
-    return Center(
+    return FittedBox(
+      fit: BoxFit.contain,
       child: Text(
         data,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 48, color: color),
+        style: TextStyle(color: color),
       ),
     );
   }
@@ -163,32 +163,16 @@ class CandidatesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var candidatesStr = candidates.toString();
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CandidateNumberWidget(number: candidatesStr[0]),
-            CandidateNumberWidget(number: candidatesStr[1]),
-            CandidateNumberWidget(number: candidatesStr[2]),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CandidateNumberWidget(number: candidatesStr[3]),
-            CandidateNumberWidget(number: candidatesStr[4]),
-            CandidateNumberWidget(number: candidatesStr[5]),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CandidateNumberWidget(number: candidatesStr[6]),
-            CandidateNumberWidget(number: candidatesStr[7]),
-            CandidateNumberWidget(number: candidatesStr[8]),
-          ],
-        ),
+        for (var col = 0; col < 9; col += 3)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              for (var row = 0; row < 3; row++)
+                CandidateNumberWidget(number: candidatesStr[col + row]),
+            ],
+          ),
       ],
     );
   }
@@ -202,11 +186,40 @@ class CandidateNumberWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = context.read<BoardSize>().candidateSize;
+
     const color = Color(0x95030303); // TODO: Candidate numbers
-    return Text(
-      number == '0' ? '' : number,
-      style: const TextStyle(color: color, fontSize: 18),
-      textAlign: TextAlign.center,
+    return Container(
+      width: size,
+      height: size,
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: Text(
+          number == '0' ? '' : number,
+          style: const TextStyle(color: color),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
+  }
+}
+
+class BoardSize {
+  final double screenSize;
+
+  BoardSize(this.screenSize);
+
+  double get candidateSize {
+    return cellSize / 3.2;
+  }
+
+  double get boardSize => screenSize - factor;
+
+  double get cellSize {
+    return boardSize / 9;
+  }
+
+  double get factor {
+    return this.screenSize > 600 ? 150 : 32;
   }
 }

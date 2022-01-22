@@ -15,8 +15,12 @@ class SudokuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => BoardModel(level: level.number),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => BoardModel(level: level.number)),
+        Provider(create: (_) => BoardSize(MediaQuery.of(context).size.width))
+      ],
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0x40000000),
@@ -26,13 +30,21 @@ class SudokuPage extends StatelessWidget {
           children: [
             Column(
               children: [
+                const SizedBox(height: 8),
                 InformationWidget(level: level),
-                const SizedBox(height: 8),
+                const SizedBox(height: 3),
                 const BoardWidget(),
-                const SizedBox(height: 8),
-                const HelpersWidget(),
-                const SizedBox(height: 8),
-                const NumbersWidget(),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 8),
+                      const HelpersWidget(),
+                      const SizedBox(height: 8),
+                      const NumbersWidget(),
+                    ],
+                  ),
+                ),
               ],
             ),
             const GameEndedWidget(),
@@ -42,8 +54,6 @@ class SudokuPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class Level extends Equatable {
   final int number;
