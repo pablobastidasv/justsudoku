@@ -41,13 +41,19 @@ class CandidateButton extends StatelessWidget {
     var color = candidateEnabled
         ? const Color(0x95030303) // TODO: Candidate number
         : Theme.of(context).textTheme.bodyText1?.color ?? Colors.black;
-    return ActionButton(
-      icon: Icons.edit,
-      message: "Candidate",
-      onTab: () {
-        Provider.of<BoardModel>(context, listen: false).switchCandidate();
-      },
-      color: color,
+    return Column(
+      children: [
+        Switch(
+          value: !candidateEnabled,
+          onChanged: (_) {
+            Provider.of<BoardModel>(context, listen: false).switchCandidate();
+          },
+        ),
+        Text(
+          candidateEnabled ? 'Candidatos' : 'Fijo',
+          style: TextStyle(color: color),
+        )
+      ],
     );
   }
 }
