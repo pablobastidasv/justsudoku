@@ -58,6 +58,7 @@ class BoardModel with ChangeNotifier {
   numberSelected(String number) {
     if (candidateEnabled) {
       selected?.defineCandidate(int.parse(number));
+      if(selected != null) selectCell(selected!);
     } else {
       selected?.defineFixedValue(number);
       candidateEnabled = true;
@@ -112,6 +113,7 @@ class CellModel with ChangeNotifier {
   defineCandidate(int value) {
     if (isClue) return;
     if (isFixed) number = '0';
+    error = false;
 
     final index = value - 1;
     final actual = candidates[index];

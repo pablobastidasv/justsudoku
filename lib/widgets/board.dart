@@ -193,7 +193,7 @@ class CandidateNumberWidget extends StatelessWidget {
       width: size,
       height: size,
       child: FittedBox(
-        fit: BoxFit.fill,
+        fit: BoxFit.fitHeight,
         child: Text(
           number == '0' ? '' : number,
           style: const TextStyle(color: color),
