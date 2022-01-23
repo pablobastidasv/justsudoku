@@ -24,7 +24,7 @@ class EraseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionButton(
       icon: Icons.clear,
-      message: "Erase",
+      message: "Borrar",
       onTab: Provider.of<BoardModel>(context).eraseCell,
     );
   }
