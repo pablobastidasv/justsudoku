@@ -23,6 +23,7 @@ class SudokuPage extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
+          title: Text("Just Sudoku"),
           backgroundColor: const Color(0x40000000),
           elevation: 0,
         ),
