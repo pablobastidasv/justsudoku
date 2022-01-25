@@ -18,7 +18,8 @@ class SudokuPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => BoardModel(level: level.number)),
+          create: (_) => BoardModel(level: level.number),
+        ),
         Provider(create: (_) => BoardSize(MediaQuery.of(context).size.width))
       ],
       child: Scaffold(
